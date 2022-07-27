@@ -55,20 +55,18 @@ app.layout = html.Div(children=[html.H1('SpaceX Launch Records Dashboard',
 
 # TASK 2:
 # Add a callback function for `site-dropdown` as input, `success-pie-chart` as output
-@app.callback(Output(component_id='success-pie-chart', component_property='figure'),
-              Input(component_id='site-dropdown', component_property='value'))
-def get_pie_chart(entered_site):
-    filtered_df = spacex_df
-    if entered_site == 'ALL':
-        fig = px.pie(filtered_df, values='class', 
-        names='pie chart names', 
-        title='title')
+@app.callback(
+    Output(component_id='success-pie-chart', component_property='figure'),
+    Input(component_id='site-dropdown', component_property='value'))
+
+def build_graph(site_dropdown):
+    if site_dropdown == 'ALL':
+        fig = px.pie(data_frame = spacex_df, names='Launch Site', values='class' ,title='Total Launches for All Sites')
         return fig
     else:
-         # return the outcomes piechart for a selected site
-        filtered_df=spacex_df[spacex_df['Launch Site']== entered_site]
-        filtered_df=filtered_df.groupby(['Launch Site','class']).size().reset_index(name='class count')
-        fig = px.pie(data_frame = filtered_df,values='class count', names='class',title=f"Total Success Launches for site {entered_site}")
+        #specific_df = spacex_df['Launch Site']
+        specific_df=spacex_df.loc[spacex_df['Launch Site'] == site_dropdown]
+        fig = px.pie(data_frame = specific_df, names='class',title='Total Launch for a Specific Site')
         return fig
 
 # TASK 4:
@@ -76,15 +74,15 @@ def get_pie_chart(entered_site):
 @app.callback(Output(component_id='success-payload-scatter-chart',component_property='figure'),
                 [Input(component_id='site-dropdown',component_property='value'),
                 Input(component_id='payload-slider',component_property='value')])
-def get_scatter_chart(entered_site,payload):
+def get_scatter_chart(site_dropdown,payload):
      #filtered_df = spacex_df
     filtered_df = spacex_df[spacex_df['Payload Mass (kg)'].between(payload[0],payload[1])]
     
-    if entered_site=='ALL':
+    if site_dropdown=='ALL':
         fig=px.scatter(filtered_df,x='Payload Mass (kg)',y='class',color='Booster Version Category',title='Success count on Payload mass for all sites')
         return fig
     else:
-        filtered_df=iltered_df[filtered_df['Launch Site']==entered_site]
+        filtered_df=iltered_df[filtered_df['Launch Site']==site_dropdown]
         fig=px.scatter(filtered_df,x='Payload Mass (kg)',y='class',color='Booster Version Category',title=f"Success count on Payload mass for site {entered_site}")
         return fig
 
