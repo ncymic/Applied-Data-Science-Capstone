@@ -22,7 +22,7 @@ In this capstone, we will predict if the Falcon 9 first stage will land successf
 - spacex_dash_app.py, Hands-on Lab Build an Interactive Dashboard with Ploty Dash.txt
 
 #### Week 4 Predictive Analysis 
-- Module 10 Machine Learning Prediction lab.ipynb
+- Predictive Analysis.ipynb
 
 #### Week 5 Present Your Data-Driven Insights
 Final Presentation - 
