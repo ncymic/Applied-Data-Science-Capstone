@@ -71,19 +71,24 @@ def build_graph(site_dropdown):
 
 # TASK 4:
 # Add a callback function for `site-dropdown` and `payload-slider` as inputs, `success-payload-scatter-chart` as output
-@app.callback(Output(component_id='success-payload-scatter-chart',component_property='figure'),
-                [Input(component_id='site-dropdown',component_property='value'),
-                Input(component_id='payload-slider',component_property='value')])
-def get_scatter_chart(site_dropdown,payload):
-     #filtered_df = spacex_df
-    filtered_df = spacex_df[spacex_df['Payload Mass (kg)'].between(payload[0],payload[1])]
-    
-    if site_dropdown=='ALL':
-        fig=px.scatter(filtered_df,x='Payload Mass (kg)',y='class',color='Booster Version Category',title='Success count on Payload mass for all sites')
+@app.callback(
+    Output(component_id='success-payload-scatter-chart', component_property='figure'),
+    [Input(component_id='site-dropdown', component_property='value'),
+    Input(component_id='payload-slider', component_property='value')])
+
+def update_graph(site_dropdown, payload_slider):
+    if site_dropdown == 'ALL':
+        filtered_data = spacex_df[(spacex_df['Payload Mass (kg)']>=payload_slider[0])
+        &(spacex_df['Payload Mass (kg)']<=payload_slider[1])]
+        fig = px.scatter(data_frame=filtered_data, x="Payload Mass (kg)", y="class", 
+        color="Booster Version Category")
         return fig
     else:
-        filtered_df=iltered_df[filtered_df['Launch Site']==site_dropdown]
-        fig=px.scatter(filtered_df,x='Payload Mass (kg)',y='class',color='Booster Version Category',title=f"Success count on Payload mass for site {entered_site}")
+        specific_df=spacex_df.loc[spacex_df['Launch Site'] == site_dropdown]
+        filtered_data = specific_df[(specific_df['Payload Mass (kg)']>=payload_slider[0])
+        &(spacex_df['Payload Mass (kg)']<=payload_slider[1])]
+        fig = px.scatter(data_frame=filtered_data, x="Payload Mass (kg)", y="class", 
+        color="Booster Version Category")
         return fig
 
 # Run the app
